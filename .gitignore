@@ -1,0 +1,7 @@
+a.*
+*.c
+*.cpp
+*.txt
+*.error
+*.err
+*.log
