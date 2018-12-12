@@ -1,14 +1,40 @@
+// Функция сортировки
 	.text
 	.globl	_Z4compPKvS0_
+
+
+// Определил тип
 	.type	_Z4compPKvS0_, @function
 _Z4compPKvS0_:
+
+
+// Тело функции
 .LFB7:
+
+
+// Начало функции
 	.cfi_startproc
+
+
+// Слили в стек
 	pushq	%rbp
+
+
+// Директивы для отладчика
 	.cfi_def_cfa_offset 16
 	.cfi_offset 6, -16
+
+
+// Взяли входное значение и скопировали его
 	movq	%rsp, %rbp
+
+
+// Директива отладчика
 	.cfi_def_cfa_register 6
+
+
+
+// Всё копируем входные значения функции сортировки
 	movq	%rdi, -8(%rbp)
 	movq	%rsi, -16(%rbp)
 	movq	-8(%rbp), %rax
@@ -17,12 +43,32 @@ _Z4compPKvS0_:
 	movl	(%rax), %eax
 	subl	%eax, %edx
 	movl	%edx, %eax
+
+// Сливаем функцию из стека
 	popq	%rbp
+
+
+
+// Директива отладчика
 	.cfi_def_cfa 7, 8
+
+// Вернуть конечный результат из функции
 	ret
+
+
+
+// Конец функции
 	.cfi_endproc
 .LFE7:
+
+
+
+// Определение размера функции
 	.size	_Z4compPKvS0_, .-_Z4compPKvS0_
+
+
+
+// Тут как всегда, закодированые строки выводимые на экран и ничего более. Данные в режиме read-only
 	.section	.rodata
 	.align 8
 .LC0:
@@ -53,38 +99,75 @@ _Z4compPKvS0_:
 	.align 8
 .LC10:
 	.string	"\n \320\222\321\213\320\262\320\276\320\264 \320\272\320\276\320\275\320\265\321\207\320\275\320\276\320\271 \320\274\320\260\321\202\321\200\320\270\321\206\321\213 "
+
+
+
+
+// Наша входная функция
 	.text
 	.globl	main
+
+
+
+// Тип функции определили
 	.type	main, @function
+
+
+// Тело функции
 main:
 .LFB8:
+
+
+// Начало функции и слив в стек
 	.cfi_startproc
 	pushq	%rbp
+
+
+// Для debagger
 	.cfi_def_cfa_offset 16
 	.cfi_offset 6, -16
 	movq	%rsp, %rbp
 	.cfi_def_cfa_register 6
+
+
+
+// Вот тут начинается интересное. Работаем с массивоми. Задаём три массива
 	pushq	%r15
 	pushq	%r14
 	pushq	%r13
 	pushq	%r12
 	pushq	%rbx
 	subq	$328, %rsp
+
+
+Опять информация для Debugger
 	.cfi_offset 15, -24
 	.cfi_offset 14, -32
 	.cfi_offset 13, -40
 	.cfi_offset 12, -48
 	.cfi_offset 3, -56
+
+
+// Тут мы начинаем вычисления для матрицы. Подготовка матрицы
 	movq	%rsp, %rax
 	movq	%rax, %r15
 	leaq	.LC0(%rip), %rdi
+
+
+// Выводим числа на экран определяющие строки и тобцы
 	call	puts@PLT
 	leaq	-180(%rbp), %rax
 	movq	%rax, %rsi
 	leaq	.LC1(%rip), %rdi
 	movl	$0, %eax
+
+
+// Считываем и вносим данные в матрицу с указанием номера столбца и строки
 	call	scanf@PLT
 	movl	-180(%rbp), %eax
+
+
+// Расширение последнего операнда из регистра до 64 бит
 	cltq
 	leaq	-1(%rax), %rdx
 	movq	%rdx, -120(%rbp)
@@ -98,6 +181,9 @@ main:
 	movq	$0, -328(%rbp)
 	movq	%rdx, %rax
 	addq	$1, %rax
+
+
+// Сдвигаем регистр операнда на два для расширения объёма и это происходит циклично.
 	salq	$2, %rax
 	leaq	3(%rax), %rdx
 	movl	$16, %eax
@@ -106,10 +192,16 @@ main:
 	movl	$16, %ebx
 	movl	$0, %edx
 	divq	%rbx
+
+
+// Это просто выравнивание после операций для  расчёта матрицы и её размерности
 	imulq	$16, %rax, %rax
 	subq	%rax, %rsp
 	movq	%rsp, %rax
 	addq	$3, %rax
+
+
+// Логический переход цикла
 	shrq	$2, %rax
 	salq	$2, %rax
 	movq	%rax, -128(%rbp)
@@ -266,6 +358,10 @@ main:
 	salq	$2, %rax
 	movq	%rax, -176(%rbp)
 	leaq	.LC2(%rip), %rdi
+
+
+
+// Подготовили размерность матрицы и вводим значения
 	call	puts@PLT
 	movl	$0, -52(%rbp)
 .L7:
@@ -290,6 +386,8 @@ main:
 	movl	%eax, %esi
 	leaq	.LC4(%rip), %rdi
 	movl	$0, %eax
+
+// Выполняем определение побочной диагонали и её сортировку
 	call	printf@PLT
 	movq	%r12, %rcx
 	shrq	$2, %rcx
@@ -511,6 +609,9 @@ main:
 	movl	%eax, %esi
 	leaq	.LC8(%rip), %rdi
 	movl	$0, %eax
+
+
+// Вывод об окончании программы
 	call	printf@PLT
 	addl	$1, -112(%rbp)
 	jmp	.L24
@@ -521,6 +622,9 @@ main:
 	movl	$0, %eax
 	movq	%r15, %rsp
 	leaq	-40(%rbp), %rsp
+
+
+// Отчистка стека от матрицы
 	popq	%rbx
 	popq	%r12
 	popq	%r13
